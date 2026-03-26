@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="glass-card">
+    <h2 class="text-center"><i class="fas fa-chart-pie" style="color: var(--primary);"></i> Customer Insights Dashboard</h2>
+    
+    <!-- Stats Row -->
+    <div class="dashboard-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); margin-top: 1.5rem; margin-bottom: 0;">
+        <div class="stat-box">
+            <i class="fas fa-users" style="color: var(--accent-red); font-size: 2rem;"></i>
+            <div class="stat-value" id="stat-total">-</div>
+            <div>Total Customers</div>
+        </div>
+        <div class="stat-box">
+            <i class="fas fa-dollar-sign" style="color: var(--accent-green); font-size: 2rem;"></i>
+            <div class="stat-value" id="stat-income">-</div>
+            <div>Avg Income (k$)</div>
+        </div>
+        <div class="stat-box">
+            <i class="fas fa-user-clock" style="color: var(--primary); font-size: 2rem;"></i>
+            <div class="stat-value" id="stat-age">-</div>
+            <div>Avg Age</div>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-grid" style="margin-top: 2rem;">
+    <!-- Scatter Plot -->
+    <div class="glass-card" style="grid-column: 1 / -1; height: 500px;">
+        <h3><i class="fas fa-project-diagram" style="color: var(--secondary);"></i> Customer Segments</h3>
+        <p>Annual Income vs Spending Score</p>
+        <div class="chart-container-wrapper" style="height: 380px;">
+            <div class="chart-container" style="height: 100%;">
+                <canvas id="scatterChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Elbow Graph -->
+    <div class="glass-card">
+        <h3><i class="fas fa-chart-line" style="color: var(--accent-yellow);"></i> Elbow Method</h3>
+        <p>Finding optimal K (WCSS)</p>
+        <div class="chart-container-wrapper">
+            <div class="chart-container">
+                <canvas id="elbowChart"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Silhouette Score -->
+    <div class="glass-card">
+        <h3><i class="fas fa-chart-bar" style="color: var(--accent-green);"></i> Silhouette Scores</h3>
+        <p>Validation of clustering quality across K</p>
+        <div class="chart-container-wrapper">
+            <div class="chart-container">
+                <canvas id="silhouetteChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
+<script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+{% endblock %}

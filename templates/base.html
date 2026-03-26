@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Segmentation SaaS</title>
+    <!-- Modern Inter and Poppins fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    
+    <div class="app-container">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <a href="/" class="sidebar-logo">
+                <i class="fas fa-layer-group" style="font-size: 1.5rem;"></i>
+                <span>Segment AI</span>
+            </a>
+            
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="/" class="{% if request.path == '/' %}active{% endif %}">
+                        <i class="fas fa-home"></i>
+                        <span>Overview</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/dashboard" class="{% if request.path == '/dashboard' %}active{% endif %}">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/predict_page" class="{% if request.path == '/predict_page' %}active{% endif %}">
+                        <i class="fas fa-magic"></i>
+                        <span>Predict</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/about" class="{% if request.path == '/about' %}active{% endif %}">
+                        <i class="fas fa-info-circle"></i>
+                        <span>About</span>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Main Content Wrapper -->
+        <div class="main-wrapper">
+            
+            <!-- Top Navbar -->
+            <header class="top-navbar">
+                <div style="display: flex; align-items: center;">
+                    <div class="hamburger-menu" id="hamburger" onclick="document.getElementById('sidebar').classList.toggle('active')">
+                        <i class="fas fa-bars"></i>
+                    </div>
+                </div>
+
+                <div class="top-nav-actions">
+                    <button id="theme-toggle" class="icon-btn" title="Toggle Dark/Light Mode" style="border:none;">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    {% if user_id %}
+                    <a href="{{ url_for('logout') }}" class="icon-btn" title="Logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </a>
+                    <div style="display: flex; align-items: center; gap: 0.75rem; background: var(--card-bg); padding: 0.35rem 0.5rem 0.35rem 1rem; border-radius: 50px; border: 1px solid var(--card-border);">
+                        <span style="font-weight: 600; font-size: 0.95rem; color: var(--text-dark);">Hello, {{ username }}</span>
+                        <div class="profile-pic" title="{{ username }}">
+                            <span>{{ username[0]|upper if username else 'U' }}</span>
+                        </div>
+                    </div>
+                    {% else %}
+                    <a href="{{ url_for('login') }}" class="btn btn-primary" style="padding: 0.5rem 1.25rem;">Sign In</a>
+                    {% endif %}
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <main class="content-container">
+                {% block content %}{% endblock %}
+            </main>
+
+        </div>
+    </div>
+
+    <!-- Chatbot Widget -->
+    <div class="chatbot-widget" id="chatbot-widget">
+        <div class="chatbot-header">
+            <div><i class="fas fa-robot"></i> Segment AI Assistant</div>
+            <i class="fas fa-times" id="chatbot-close" style="cursor: pointer;"></i>
+        </div>
+        <div class="chatbot-messages" id="chatbot-messages">
+            <div class="chat-message bot">
+                Hi! I'm your AI assistant powered by Gemini. How can I help you regarding customer segmentation today?
+            </div>
+        </div>
+        <div class="chatbot-input">
+            <input type="text" id="chatbot-input-field" placeholder="Ask a question...">
+            <button id="chatbot-send-btn"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+    
+    <div class="chatbot-toggle" id="chatbot-toggle">
+        <i class="fas fa-comment-dots"></i>
+    </div>
+
+    <!-- Main JS functions if needed -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggle = document.getElementById('theme-toggle');
+            if(themeToggle){
+                const icon = themeToggle.querySelector('i');
+                const htmlEl = document.documentElement;
+                
+                // Initialize preference
+                if(localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                    htmlEl.setAttribute('data-theme', 'dark');
+                    icon.classList.replace('fa-moon', 'fa-sun');
+                }
+                
+                themeToggle.addEventListener('click', () => {
+                    const isDark = htmlEl.getAttribute('data-theme') === 'dark';
+                    if (isDark) {
+                        htmlEl.removeAttribute('data-theme');
+                        localStorage.setItem('theme', 'light');
+                        icon.classList.replace('fa-sun', 'fa-moon');
+                    } else {
+                        htmlEl.setAttribute('data-theme', 'dark');
+                        localStorage.setItem('theme', 'dark');
+                        icon.classList.replace('fa-moon', 'fa-sun');
+                    }
+                    
+                    // Dispatch event for charts to listen to
+                    window.dispatchEvent(new Event('themeChanged'));
+                });
+            }
+        });
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

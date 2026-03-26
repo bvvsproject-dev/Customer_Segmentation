@@ -1,0 +1,22 @@
+# Environment variables (API keys)
+.env
+
+# Database (Do not commit user credentials)
+users.db
+*.sqlite3
+
+# Python caches
+__pycache__/
+*.py[cod]
+
+# Machine Learning Models (auto-generated)
+model/
+*.pkl
+
+# Duplicate/Unnecessary folders
+customer segmentation using K-means/
+.vscode/
+
+# Virtual Environments
+venv/
+env/

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="glass-card" style="max-width: 600px; margin: 0 auto;">
+    <h2 class="text-center"><i class="fas fa-magic" style="color: var(--primary);"></i> Predict Customer Segment</h2>
+    <p class="text-center" style="margin-bottom: 2rem;">Enter customer details to instantly assign them to a cluster.</p>
+
+    <form id="predict-form">
+        <div class="form-group">
+            <label for="gender">Gender</label>
+            <select id="gender" class="form-control" required>
+                <option value="" disabled selected>Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="age">Age</label>
+            <input type="number" id="age" class="form-control" placeholder="e.g. 35" min="10" max="100" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="income">Annual Income (k$)</label>
+            <input type="number" id="income" class="form-control" placeholder="e.g. 75" min="0" max="250" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="spending">Spending Score (1-100)</label>
+            <input type="number" id="spending" class="form-control" placeholder="e.g. 50" min="1" max="100" required>
+        </div>
+        
+        <button type="submit" class="btn btn-primary" id="predict-btn" style="width: 100%; justify-content: center; margin-top: 1rem;">
+            <span class="loader" style="border-top-color: var(--card-bg);"></span>
+            <span class="btn-text">Predict Cluster</span>
+        </button>
+    </form>
+    
+    <!-- Result Box -->
+    <div class="result-box" id="result-box">
+        <div class="result-content-wrapper">
+            <div class="result-text-section">
+                <h3 id="res-cluster">Cluster X</h3>
+                <h4 id="res-label" style="margin-bottom: 1rem;">Label Name</h4>
+                <p style="margin-bottom: 0;"><strong>Recommendation:</strong></p>
+                <p id="res-rec" style="font-size: 0.95rem; margin-bottom: 0;"></p>
+            </div>
+            <div class="result-visual-section">
+                <div id="gender-sticker-container" class="gender-sticker">
+                    <i id="gender-icon" class="fas fa-user"></i>
+                </div>
+            </div>
+        </div>
+        
+        <div class="chart-container-predict">
+            <canvas id="predictionChart"></canvas>
+        </div>
+    </div>
+</div>
+{% endblock %}
