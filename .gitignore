@@ -10,8 +10,8 @@ __pycache__/
 *.py[cod]
 
 # Machine Learning Models (auto-generated)
-model/
-*.pkl
+# model/
+# *.pkl
 
 # Duplicate/Unnecessary folders
 customer segmentation using K-means/
