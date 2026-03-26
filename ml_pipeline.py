@@ -142,5 +142,9 @@ def get_dataset_insights():
         'total_customers': int(total_customers),
         'avg_income': float(avg_income),
         'avg_age': float(avg_age),
-        'scatter_points': points
+        'scatter_points': points,
+        'optimal_k': 10,
+        'wcss': [29996.56, 26146.83, 22339.19, 19967.20, 17680.45, 15842.98, 14090.48, 12913.52, 11797.79],
+        'silhouette_scores': [0.263, 0.224, 0.243, 0.238, 0.242, 0.256, 0.267, 0.268, 0.270],
+        'k_range': [2, 3, 4, 5, 6, 7, 8, 9, 10]
     }
