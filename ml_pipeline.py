@@ -74,13 +74,24 @@ def get_cluster_label(cluster_id, centroids):
     labels = ["Standard Customer", "Target Customer", "Careful Customer", "Careless Customer", "Sensible Customer"]
     return labels[cluster_id % len(labels)]
 
-def predict_single(gender, age, income, spending):
+_cached_kmeans = None
+_cached_scaler = None
+_cached_encoder = None
+
+def get_models():
+    global _cached_kmeans, _cached_scaler, _cached_encoder
     if not os.path.exists(MODEL_PATH):
         train_and_evaluate()
         
-    kmeans = joblib.load(MODEL_PATH)
-    scaler = joblib.load(SCALER_PATH)
-    encoder = joblib.load(ENCODER_PATH)
+    if _cached_kmeans is None:
+        _cached_kmeans = joblib.load(MODEL_PATH)
+        _cached_scaler = joblib.load(SCALER_PATH)
+        _cached_encoder = joblib.load(ENCODER_PATH)
+        
+    return _cached_kmeans, _cached_scaler, _cached_encoder
+
+def predict_single(gender, age, income, spending):
+    kmeans, scaler, encoder = get_models()
     
     g_encoded = encoder.transform([gender])[0]
     input_data = np.array([[g_encoded, age, income, spending]])
@@ -112,10 +123,7 @@ def get_dataset_insights():
     avg_income = df['Annual Income (k$)'].mean()
     avg_age = df['Age'].mean()
     
-    if not os.path.exists(MODEL_PATH):
-        train_and_evaluate()
-    
-    kmeans = joblib.load(MODEL_PATH)
+    kmeans, _, _ = get_models()
     scaled_features, _, _, _ = preprocess_data(df)
     
     clusters = kmeans.predict(scaled_features)
