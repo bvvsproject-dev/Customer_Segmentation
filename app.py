@@ -171,8 +171,7 @@ def predict_api():
 def data_api():
     try:
         insights = get_dataset_insights()
-        metrics = train_and_evaluate()
-        insights.update(metrics)
+        # Removed train_and_evaluate() here to prevent OOM memory spikes on Render free tier
         return jsonify({"status": "success", "data": insights}), 200
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
