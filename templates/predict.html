@@ -36,23 +36,50 @@
         </button>
     </form>
     
-    <!-- Result Box -->
-    <div class="result-box" id="result-box">
-        <div class="result-content-wrapper">
-            <div class="result-text-section">
-                <h3 id="res-cluster">Cluster X</h3>
-                <h4 id="res-label" style="margin-bottom: 1rem;">Label Name</h4>
-                <p style="margin-bottom: 0;"><strong>Recommendation:</strong></p>
-                <p id="res-rec" style="font-size: 0.95rem; margin-bottom: 0;"></p>
+    <!-- Premium Result Box -->
+    <div class="result-box premium-result-layout" id="result-box">
+        <div class="result-header">
+            <div id="gender-sticker-container" class="gender-sticker-small">
+                <i id="gender-icon" class="fas fa-user"></i>
             </div>
-            <div class="result-visual-section">
-                <div id="gender-sticker-container" class="gender-sticker">
-                    <i id="gender-icon" class="fas fa-user"></i>
-                </div>
+            <div class="header-titles">
+                <h3 id="res-cluster" class="cluster-badge">Cluster X</h3>
+                <h4 id="res-label" class="label-title">Label Name</h4>
             </div>
         </div>
-        
-        <div class="chart-container-predict">
+
+        <div class="customer-chips-container mt-3">
+            <div class="customer-chip">
+                <span class="chip-label">Age</span>
+                <span class="chip-value" id="chip-age">--</span>
+            </div>
+            <div class="customer-chip">
+                <span class="chip-label">Income</span>
+                <span class="chip-value" id="chip-income">$--k</span>
+            </div>
+            <div class="customer-chip">
+                <span class="chip-label">Score</span>
+                <span class="chip-value" id="chip-spending">--</span>
+            </div>
+        </div>
+
+        <div class="ai-recommendation-box mt-4">
+            <div class="box-header">
+                <i class="fas fa-bolt" style="color: var(--accent-yellow);"></i> AI Strategy Recommendation
+            </div>
+            <div class="box-content" id="res-rec">
+                <!-- AI Content injected here -->
+            </div>
+        </div>
+
+        <div class="campaign-channels-container mt-4" id="channels-container" style="display: none;">
+            <h4 style="margin-bottom: 1rem; font-size: 1.1rem; color: var(--text-dark);"><i class="fas fa-bullhorn" style="color: var(--primary);"></i> Automated Pitches</h4>
+            <div class="channels-grid" id="channels-grid">
+                <!-- Rendered via JS -->
+            </div>
+        </div>
+
+        <div class="chart-container-predict mt-4">
             <canvas id="predictionChart"></canvas>
         </div>
     </div>

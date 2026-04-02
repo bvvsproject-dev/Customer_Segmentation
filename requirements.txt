@@ -6,3 +6,6 @@ numpy
 gunicorn
 python-dotenv
 google-generativeai
+Flask-SQLAlchemy
+werkzeug
+reportlab

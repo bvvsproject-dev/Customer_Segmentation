@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>AI Based Smart Customer Behavior Analysis for Business Report</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 2cm;
+            @top-center { content: "AI Based Smart Customer Behavior Analysis for Business Report"; font-family: sans-serif; font-size: 10px; color: #666; }
+            @bottom-right { content: "Page " counter(page); font-family: sans-serif; font-size: 10px; color: #666; }
+        }
+        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #333; line-height: 1.5; font-size: 12px; }
+        h1, h2, h3 { color: #1f2937; }
+        h1 { border-bottom: 2px solid #4f8cff; padding-bottom: 5px; }
+        .page-break { page-break-before: always; }
+        .summary-box { background: #f3f4f6; padding: 15px; border-radius: 5px; margin-bottom: 20px; display: table; width: 100%; box-sizing: border-box; }
+        .summary-item { display: table-cell; width: 25%; text-align: center; }
+        .summary-value { font-size: 18px; font-weight: bold; color: #4f8cff; }
+        .summary-label { font-size: 10px; color: #6b7280; text-transform: uppercase; }
+        
+        .chart-img { max-width: 100%; height: auto; border: 1px solid #e5e7eb; border-radius: 5px; margin-bottom: 20px; }
+        
+        .cluster-section { margin-top: 30px; }
+        .cluster-stats { display: table; width: 100%; background: #eef2ff; padding: 10px; margin-bottom: 10px; border-left: 4px solid #4f8cff; }
+        .cluster-stat-item { display: table-cell; text-align: center; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 11px; }
+        th, td { border: 1px solid #e5e7eb; padding: 8px; text-align: left; }
+        th { background-color: #f9fafb; font-weight: bold; color: #4b5563; }
+        tr:nth-child(even) { background-color: #fcfcfc; }
+        .note { margin-top: 5px; font-size: 10px; color: #9ca3af; font-style: italic; }
+    </style>
+</head>
+<body>
+
+    <!-- PAGE 1: SUMMARY -->
+    <h1>AI Based Smart Customer Behavior Analysis for Business Report</h1>
+    
+    <h2>1. Executive Summary</h2>
+    <div class="summary-box">
+        <div class="summary-item">
+            <div class="summary-value">{{ payload.stats.total }}</div>
+            <div class="summary-label">Total Customers</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-value">${{ payload.stats.income }}k</div>
+            <div class="summary-label">Avg Income</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-value">{{ payload.stats.age }}</div>
+            <div class="summary-label">Avg Age</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-value">{{ payload.stats.cluster_count }}</div>
+            <div class="summary-label">Total Segments</div>
+        </div>
+    </div>
+    
+    <h2>AI Key Insights</h2>
+    {% if payload.insights %}
+        <ul>
+        {% for ins in payload.insights %}
+            <li style="margin-bottom: 10px;">
+                <strong>{{ ins.label }}:</strong> {{ ins.explanation }} <br>
+                <em>Strategy Implementation:</em> {{ ins.strategy }}
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No targeted AI strategies applied during this session.</p>
+    {% endif %}
+
+    <div class="page-break"></div>
+
+    <!-- PAGE 2: GRAPHS -->
+    <h2>2. Visual Analytics</h2>
+    
+    <h3>Cluster Distribution (Income vs Spend)</h3>
+    {% if payload.charts.scatter %}
+    <img class="chart-img" src="{{ payload.charts.scatter }}" alt="Scatter Chart">
+    {% endif %}
+    
+    <h3>Elbow Method (WCSS Optimization)</h3>
+    {% if payload.charts.elbow %}
+    <img class="chart-img" src="{{ payload.charts.elbow }}" alt="Elbow Chart">
+    {% endif %}
+
+    <h3>Silhouette Scores (Cluster Validity)</h3>
+    {% if payload.charts.silhouette %}
+    <img class="chart-img" src="{{ payload.charts.silhouette }}" alt="Silhouette Chart">
+    {% endif %}
+
+    <div class="page-break"></div>
+
+    <!-- PAGE 3+: CLUSTER DETAILS -->
+    <h2>3. Segment Database (Top Samples)</h2>
+    
+    {% for cid, cdata in clusters.items() %}
+    <div class="cluster-section">
+        <h3 style="margin-bottom: 5px;">{{ cdata.label }} (Cluster ID: {{ cid }})</h3>
+        
+        <div class="cluster-stats">
+            <div class="cluster-stat-item"><strong>Size:</strong> {{ cdata.size }}</div>
+            <div class="cluster-stat-item"><strong>Avg Age:</strong> {{ "%.1f"|format(cdata.avg_age) }}</div>
+            <div class="cluster-stat-item"><strong>Avg Income:</strong> ${{ "%.1f"|format(cdata.avg_income) }}k</div>
+            <div class="cluster-stat-item"><strong>Avg Score:</strong> {{ "%.1f"|format(cdata.avg_score) }}</div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Gender</th>
+                    <th>Age</th>
+                    <th>Annual Income (k$)</th>
+                    <th>Spending Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pt in cdata.points %}
+                <tr>
+                    <td>{{ pt.gender }}</td>
+                    <td>{{ pt.age }}</td>
+                    <td>${{ "%.1f"|format(pt.x) }}k</td>
+                    <td>{{ pt.y }}</td>
+                </tr>
+                {% endendfor %}
+            </tbody>
+        </table>
+        <div class="note">* Showing first {{ cdata.points|length }} records of {{ cdata.size }} total.</div>
+    </div>
+    {% endfor %}
+
+</body>
+</html>

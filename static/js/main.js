@@ -46,8 +46,44 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (result.status === 'success') {
                     document.getElementById('res-cluster').textContent = `Cluster ${result.cluster}`;
                     document.getElementById('res-label').textContent = result.label;
-                    document.getElementById('res-rec').textContent = result.recommendation;
+                    document.getElementById('res-rec').innerHTML = result.recommendation;
                     
+                    const channelsContainer = document.getElementById('channels-container');
+                    const channelsGrid = document.getElementById('channels-grid');
+                    if (channelsContainer && channelsGrid) {
+                        channelsGrid.innerHTML = '';
+                        if (result.channels && result.channels.length > 0) {
+                            channelsContainer.style.display = 'block';
+                            result.channels.forEach(ch => {
+                                let iconObj = {
+                                    'whatsapp': 'fab fa-whatsapp',
+                                    'ads': 'fas fa-ad',
+                                    'email': 'fas fa-envelope'
+                                };
+                                let icon = iconObj[ch.type] || 'fas fa-bullhorn';
+                                
+                                let card = document.createElement('div');
+                                card.className = `channel-card ${ch.type}`;
+                                card.innerHTML = `
+                                    <div class="channel-icon"><i class="${icon}"></i></div>
+                                    <div class="channel-title">${ch.title}</div>
+                                    <div class="discount-badge">${ch.discount}</div>
+                                    <div class="pitch-text">"${ch.pitch}"</div>
+                                `;
+                                channelsGrid.appendChild(card);
+                            });
+                        } else {
+                            channelsContainer.style.display = 'none';
+                        }
+                    }
+
+                    const chipAge = document.getElementById('chip-age');
+                    if (chipAge) chipAge.textContent = data.age;
+                    const chipIncome = document.getElementById('chip-income');
+                    if (chipIncome) chipIncome.textContent = `$${data.income}k`;
+                    const chipSpending = document.getElementById('chip-spending');
+                    if (chipSpending) chipSpending.textContent = data.spending;
+
                     const stickerIcon = document.getElementById('gender-icon');
                     const stickerContainer = document.getElementById('gender-sticker-container');
                     if (data.gender === 'Male') {

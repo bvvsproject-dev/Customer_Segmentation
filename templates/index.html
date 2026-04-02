@@ -1,25 +1,60 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="glass-card hero-card">
-    <h1>Welcome to Customer Segmentation</h1>
-    <p>Intelligent Customer Segmentation using K-Means Clustering.</p>
-    <div class="hero-buttons">
-        <a href="/dashboard" class="btn btn-primary"><i class="fas fa-chart-line"></i> Go to Dashboard</a>
-        <a href="/predict_page" class="btn btn-secondary"><i class="fas fa-magic"></i> Predict Customer</a>
+<div class="advanced-hero-container">
+    <div class="hero-left stagger-1">
+        <div class="badge-pill">
+            <i class="fas fa-sparkles" style="color: var(--accent-yellow);"></i> Next-Gen AI Platform
+        </div>
+        <h1 class="hero-title">AI Based Smart Customer Behavior Analysis <span class="text-gradient">for Business</span></h1>
+        <p class="hero-subtitle">Harness the power of K-Means clustering and Generative AI to unlock deep, actionable insights about your customer base instantaneously.</p>
+        <div class="hero-buttons">
+            <a href="/dashboard" class="btn btn-primary"><i class="fas fa-chart-line"></i> Dashboard</a>
+            <a href="/predict_page" class="btn btn-secondary glow-on-hover"><i class="fas fa-magic"></i> AI Predict</a>
+        </div>
+    </div>
+    
+    <div class="hero-right stagger-2">
+        <div class="floating-abstract a"></div>
+        <div class="floating-abstract b"></div>
+        <div class="hero-visual-card">
+            <div class="visual-header">
+                <i class="fas fa-circle" style="color: #EF4444;"></i>
+                <i class="fas fa-circle" style="color: #F59E0B;"></i>
+                <i class="fas fa-circle" style="color: #22C55E;"></i>
+                <span style="margin-left:auto; font-size:0.8rem; color:var(--text-muted);"><i class="fas fa-lock"></i> Secured AI Link</span>
+            </div>
+            <div class="visual-body">
+                <div class="skeleton-line w-100"></div>
+                <div class="skeleton-line w-75"></div>
+                <div class="skeleton-line w-50"></div>
+                <div class="visual-chart mt-4">
+                    <div class="bar" style="height: 60%; background: var(--primary);"></div>
+                    <div class="bar" style="height: 40%; background: var(--secondary);"></div>
+                    <div class="bar" style="height: 80%; background: var(--accent-yellow);"></div>
+                    <div class="bar" style="height: 30%; background: var(--accent-red);"></div>
+                </div>
+            </div>
+            <div class="floating-badge badge-1"><i class="fas fa-chart-pie"></i> Data Analyzed</div>
+            <div class="floating-badge badge-2"><i class="fas fa-robot"></i> AI Engine Active</div>
+        </div>
     </div>
 </div>
 
-<div class="dashboard-grid">
-    <div class="glass-card text-center">
-        <i class="fas fa-brain fa-3x" style="color: var(--accent-red); margin-bottom: 1rem;"></i>
-        <h3>Machine Learning</h3>
-        <p>Uses optimal K-Means to divide customers into targeted segments based on behavior and spending.</p>
+<div class="dashboard-grid mt-5 stagger-3">
+    <div class="glass-card premium-card">
+        <div class="card-icon-wrapper">
+            <i class="fas fa-brain fa-2x" style="color: var(--primary);"></i>
+        </div>
+        <h3 class="mt-3">Machine Learning</h3>
+        <p>Uses optimal K-Means to divide customers into targeted segments based on hidden behavioral spending patterns.</p>
     </div>
-    <div class="glass-card text-center">
-        <i class="fas fa-chart-pie fa-3x" style="color: var(--accent-yellow); margin-bottom: 1rem;"></i>
-        <h3>Deep Insights</h3>
-        <p>Analyze income vs spending patterns to understand your demographics better.</p>
+    <div class="glass-card premium-card">
+        <div class="card-icon-wrapper">
+            <i class="fas fa-microchip fa-2x" style="color: var(--secondary);"></i>
+        </div>
+        <h3 class="mt-3">Generative AI Insights</h3>
+        <p>Integrates with cutting-edge LLMs to instantly map a cluster ID to advanced, multi-part business strategies.</p>
     </div>
 </div>
 {% endblock %}
