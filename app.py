@@ -317,9 +317,8 @@ def elbow_api():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@app.route('/api/silhouette-data', methods=['GET'])
-@login_required
-def silhouette_api():
+@app.route('/silhouette-data', methods=['GET'])
+def silhouette_data():
     project_id = session.get('project_id') if hasattr(session, 'get') else None
     data_path = get_path_for_project(project_id)
     try:

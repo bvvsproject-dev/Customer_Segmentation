@@ -57,12 +57,23 @@ async function fetchAndRenderDashboard() {
                 })
                 .catch(err => console.error(err));
                 
-            fetch(`/api/silhouette-data`)
+            const silSpinner = document.getElementById('silSpinner');
+            if (silSpinner) silSpinner.style.display = 'block';
+            
+            fetch(`/silhouette-data`)
                 .then(res => res.json())
                 .then(d => {
-                    if (d.k_range && d.scores) renderSilhouetteChart(d.k_range, d.scores, rawData.optimal_k || 5);
+                    if (silSpinner) silSpinner.style.display = 'none';
+                    if (d.k_values && d.scores && d.k_values.length > 0) {
+                        renderSilhouetteChart(d.k_values, d.scores);
+                    } else {
+                        console.error('No silhouette data returned');
+                    }
                 })
-                .catch(err => console.error(err));
+                .catch(err => {
+                    if (silSpinner) silSpinner.style.display = 'none';
+                    console.error('Error fetching silhouette data:', err);
+                });
         } else {
             // Clear or hide charts for DBSCAN, as they don't apply
             if (elbowChartInstance) elbowChartInstance.destroy();
@@ -190,7 +201,7 @@ function renderElbowChart(k_range, wcss) {
     });
 }
 
-function renderSilhouetteChart(k_range, scores, optimal_k) {
+function renderSilhouetteChart(k_values, scores) {
     const silCtx = document.getElementById('silhouetteChart');
     if (!silCtx) return;
 
@@ -198,13 +209,18 @@ function renderSilhouetteChart(k_range, scores, optimal_k) {
         silChartInstance.destroy();
     }
 
-    const bgColors = k_range.map(k => k === optimal_k ? '#4F8CFF' : 'rgba(127, 127, 213, 0.4)');
-    const hoverColors = k_range.map(k => k === optimal_k ? '#3a72d6' : 'rgba(127, 127, 213, 0.6)');
+    // Highlight best K (highest score)
+    const maxScore = Math.max(...scores);
+    const bestKIndex = scores.indexOf(maxScore);
+    const bestK = k_values[bestKIndex];
+
+    const bgColors = k_values.map(k => k === bestK ? '#4F8CFF' : 'rgba(127, 127, 213, 0.4)');
+    const hoverColors = k_values.map(k => k === bestK ? '#3a72d6' : 'rgba(127, 127, 213, 0.6)');
 
     silChartInstance = new Chart(silCtx.getContext('2d'), {
         type: 'bar',
         data: {
-            labels: k_range,
+            labels: k_values,
             datasets: [{
                 label: 'Silhouette Score',
                 data: scores,
@@ -215,6 +231,25 @@ function renderSilhouetteChart(k_range, scores, optimal_k) {
         },
         options: {
             responsive: true, maintainAspectRatio: false,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed.y !== null) {
+                                label += context.parsed.y.toFixed(3);
+                            }
+                            if (context.dataIndex === bestKIndex) {
+                                label += ' (Best K) - High score means better clustering';
+                            }
+                            return label;
+                        }
+                    }
+                }
+            },
             scales: {
                 x: { title: { display: true, text: 'Number of Clusters (K)' }, grid: { display: false } },
                 y: { title: { display: true, text: 'Score' }, grid: { borderDash: [5, 5] } }

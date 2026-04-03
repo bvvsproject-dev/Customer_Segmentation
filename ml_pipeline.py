@@ -242,15 +242,42 @@ def compute_elbow_method(data_path=DATA_PATH):
     return {"k_range": k_range, "wcss": wcss}
 
 def compute_silhouette_scores(data_path=DATA_PATH):
-    df = pd.read_csv(data_path)
-    scaled_features, _, _, _ = preprocess_data(df)
-    
-    k_range = list(range(2, 11))
-    scores = []
-    
-    if len(scaled_features) > 10:
-        for k in k_range:
-            kmeans = KMeans(n_clusters=k, init='k-means++', n_init=10, random_state=42)
-            kmeans.fit(scaled_features)
-            scores.append(float(silhouette_score(scaled_features, kmeans.labels_)))
-    return {"k_range": k_range, "scores": scores}
+    try:
+        df = pd.read_csv(data_path)
+        
+        # Ensure: dataset is not empty
+        if df.empty:
+            return {"k_values": [], "scores": []}
+            
+        # Select features (income, spending score)
+        income_col = next((c for c in df.columns if 'income' in c.lower()), None)
+        spending_col = next((c for c in df.columns if 'score' in c.lower() or 'spending' in c.lower()), None)
+        
+        if income_col and spending_col:
+            features = df[[income_col, spending_col]]
+        else:
+            features = df.select_dtypes(include=[np.number])
+            
+        # Ensure: no NaN values
+        features = features.dropna()
+        if features.empty or len(features) <= 10:
+            return {"k_values": [], "scores": []}
+            
+        scaler = StandardScaler()
+        scaled_features = scaler.fit_transform(features)
+        
+        k_values = list(range(2, 11))
+        scores = []
+        
+        # Ensure: clusters > 1 (loop runs from 2 to 10)
+        for k in k_values:
+            model = KMeans(n_clusters=k, random_state=42)
+            labels = model.fit_predict(scaled_features)
+            score = silhouette_score(scaled_features, labels)
+            scores.append(float(score))
+            
+        return {"k_values": k_values, "scores": scores}
+            
+    except Exception as e:
+        print(f"Error computing silhouette scores: {e}")
+        return {"k_values": [], "scores": []}
