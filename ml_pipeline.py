@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from sklearn.cluster import KMeans, DBSCAN, AgglomerativeClustering
+from functools import lru_cache
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import silhouette_score
@@ -181,6 +182,7 @@ def predict_single(gender, age, income, spending, project_id=None, data_path=DAT
     label = get_cluster_label(int(cluster))
     return int(cluster), label
 
+@lru_cache(maxsize=32)
 def get_dataset_insights(data_path=DATA_PATH, project_id=None, model_type='kmeans'):
     df = pd.read_csv(data_path)
     total_customers = len(df)
@@ -227,6 +229,7 @@ def get_dataset_insights(data_path=DATA_PATH, project_id=None, model_type='kmean
         'model_type': model_type
     }
 
+@lru_cache(maxsize=32)
 def compute_elbow_method(data_path=DATA_PATH):
     df = pd.read_csv(data_path)
     scaled_features, _, _, _ = preprocess_data(df)
@@ -241,6 +244,7 @@ def compute_elbow_method(data_path=DATA_PATH):
             wcss.append(float(kmeans.inertia_))
     return {"k_range": k_range, "wcss": wcss}
 
+@lru_cache(maxsize=32)
 def compute_silhouette_scores(data_path=DATA_PATH):
     try:
         df = pd.read_csv(data_path)
