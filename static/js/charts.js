@@ -231,6 +231,7 @@ function renderSilhouetteChart(k_values, scores) {
         },
         options: {
             responsive: true, maintainAspectRatio: false,
+            animation: false,
             plugins: {
                 tooltip: {
                     callbacks: {
